@@ -3,15 +3,15 @@ import Core from "@userfront/core";
 import { h } from "vue";
 
 const {
-    Singleton,
-    alias,
-    render,
-    processPage,
-    addScript1ToDocument,
-    createOrReturnPage,
-    checkPageAndUpdate,
-    executeCallbacks,
-    logErrorsAndTips,
+  Singleton,
+  alias,
+  render,
+  processPage,
+  addScript1ToDocument,
+  createOrReturnPage,
+  checkPageAndUpdate,
+  executeCallbacks,
+  logErrorsAndTips,
 } = AnyMod;
 
 const { registerUrlChangedEventListener, addInitCallback } = Core;
@@ -33,12 +33,12 @@ Singleton.Opts.api = true;
 
 // Callback to fire whenever Userfront.init is called
 addInitCallback(({ tenantId }) => {
-    Singleton.External.project = tenantId;
-    addScript1ToDocument(
-        "https://cdn.userfront.com/toolkit/page/",
-        tenantId,
-        runAnyModSetup
-    );
+  Singleton.External.project = tenantId;
+  addScript1ToDocument(
+    "https://cdn.userfront.com/toolkit/page/",
+    tenantId,
+    runAnyModSetup
+  );
 });
 
 registerUrlChangedEventListener();
@@ -46,21 +46,21 @@ registerUrlChangedEventListener();
 window.addEventListener("urlchanged", render);
 
 async function runAnyModSetup() {
-    if (Singleton.isScript1Loading) return;
-    const page = await createOrReturnPage();
-    const updatedPage = await checkPageAndUpdate(page);
-    await processPage(updatedPage);
-    executeCallbacks();
-    logErrorsAndTips();
+  if (Singleton.isScript1Loading) return;
+  const page = await createOrReturnPage();
+  const updatedPage = await checkPageAndUpdate(page);
+  await processPage(updatedPage);
+  executeCallbacks();
+  logErrorsAndTips();
 }
 
 async function mountTools() {
-    try {
-        runAnyModSetup();
-    } catch (err) {
-        let message = err && err.message ? err.message : "Problem loading page";
-        console.warn(message, err);
-    }
+  try {
+    runAnyModSetup();
+  } catch (err) {
+    let message = err && err.message ? err.message : "Problem loading page";
+    console.warn(message, err);
+  }
 }
 
 /**
@@ -72,26 +72,24 @@ async function mountTools() {
  * @returns
  */
 export function build(name) {
-    return {
-        props: {
-            toolId: {
-                type: String,
-                // required: true,
-            },
-        },
-        render() {
-            return h("div", [
-                h("div", {
-                    attrs: {
-                        id: `userfront-${this.toolId}`,
-                    },
-                }),
-            ]);
-        },
-        async mounted() {
-            await mountTools();
-        },
-    };
+  return {
+    props: {
+      toolId: {
+        type: String,
+        // required: true,
+      },
+    },
+    render() {
+      return h("div", [
+        h("div", {
+          id: `userfront-${this.toolId}`,
+        }),
+      ]);
+    },
+    async mounted() {
+      await mountTools();
+    },
+  };
 }
 
 export const SignupForm = build("signup-form");
@@ -100,15 +98,15 @@ export const PasswordResetForm = build("password-reset-form");
 export const LogoutButton = build("logout-button");
 
 export const Userfront = {
-    build,
-    SignupForm,
-    LoginForm,
-    PasswordResetForm,
-    LogoutButton,
+  build,
+  SignupForm,
+  LoginForm,
+  PasswordResetForm,
+  LogoutButton,
 };
 
 for (const attr in Core) {
-    if (!Userfront[attr]) Userfront[attr] = Core[attr];
+  if (!Userfront[attr]) Userfront[attr] = Core[attr];
 }
 
 export default Userfront;
